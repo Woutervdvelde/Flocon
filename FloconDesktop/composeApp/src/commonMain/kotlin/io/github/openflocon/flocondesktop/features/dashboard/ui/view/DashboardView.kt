@@ -28,7 +28,7 @@ fun DashboardView(
         verticalItemSpacing = 8.dp,
     ) {
         items(viewState.items) {
-            DashboardItemView(
+            DashboardContainerView(
                 modifier = Modifier.fillMaxWidth(),
                 viewState = it,
                 onClickButton = onClickButton,

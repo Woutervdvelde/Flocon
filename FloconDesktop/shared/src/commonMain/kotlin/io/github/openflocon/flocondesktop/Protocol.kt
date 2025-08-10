@@ -97,6 +97,7 @@ object Protocol {
 
             object Method {
                 const val OnClick = "onClick"
+                const val OnFormSubmitted = "onFormSubmitted"
                 const val OnTextFieldSubmitted = "onTextFieldSubmitted"
                 const val OnCheckBoxValueChanged = "onCheckBoxValueChanged"
             }

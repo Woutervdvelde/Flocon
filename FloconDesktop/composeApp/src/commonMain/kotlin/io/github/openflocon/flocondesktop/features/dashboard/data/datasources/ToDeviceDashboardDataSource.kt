@@ -4,6 +4,7 @@ import io.github.openflocon.flocondesktop.FloconOutgoingMessageDataModel
 import io.github.openflocon.flocondesktop.Protocol
 import io.github.openflocon.flocondesktop.Server
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.remote.model.ToDeviceCheckBoxValueChangedMessage
+import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.remote.model.ToDeviceSubmittedFormMessage
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.remote.model.ToDeviceSubmittedTextFieldMessage
 import io.github.openflocon.flocondesktop.messages.domain.model.DeviceIdAndPackageNameDomainModel
 import io.github.openflocon.flocondesktop.messages.domain.model.toRemote
@@ -26,6 +27,26 @@ class ToDeviceDashboardDataSource(
                 method = Protocol.ToDevice.Dashboard.Method.OnClick,
                 body = buttonId,
             ),
+        )
+    }
+
+    suspend fun submitFormEvent(
+        deviceIdAndPackageName: DeviceIdAndPackageNameDomainModel,
+        formId: String,
+        values: Map<String, String>
+    ) {
+        server.sendMessageToClient(
+            deviceIdAndPackageName = deviceIdAndPackageName.toRemote(),
+            message = FloconOutgoingMessageDataModel(
+                plugin = Protocol.ToDevice.Dashboard.Plugin,
+                method = Protocol.ToDevice.Dashboard.Method.OnFormSubmitted,
+                body = Json.encodeToString(
+                    ToDeviceSubmittedFormMessage(
+                        id = formId,
+                        values = values,
+                    ),
+                )
+            )
         )
     }
 

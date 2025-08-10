@@ -8,11 +8,11 @@ import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.ro
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardElementText
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardElementTextField
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardEntity
-import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardSectionEntity
+import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardContainerEntity
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardElementDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardId
-import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardSectionDomainModel
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardContainerDomainModel
 
 internal fun DashboardDomainModel.toEntity(deviceId: DeviceId, packageName: String): DashboardEntity = DashboardEntity(
     deviceId = deviceId,
@@ -20,13 +20,14 @@ internal fun DashboardDomainModel.toEntity(deviceId: DeviceId, packageName: Stri
     dashboardId = dashboardId,
 )
 
-internal fun DashboardSectionDomainModel.toEntity(
+internal fun DashboardContainerDomainModel.toEntity(
     dashboardId: DashboardId,
     index: Int,
-): DashboardSectionEntity = DashboardSectionEntity(
+): DashboardContainerEntity = DashboardContainerEntity(
     name = this.name,
+    type = this.containerType,
     dashboardId = dashboardId,
-    sectionOrder = index,
+    containerOrder = index,
 )
 
 internal fun DashboardElementDomainModel.toEntity(

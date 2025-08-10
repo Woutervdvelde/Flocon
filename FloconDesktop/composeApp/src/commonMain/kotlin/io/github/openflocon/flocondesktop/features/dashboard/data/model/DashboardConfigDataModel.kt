@@ -1,16 +1,18 @@
 package io.github.openflocon.flocondesktop.features.dashboard.data.model
 
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerType
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class DashboardConfigDataModel(
     val dashboardId: String,
-    val sections: List<SectionConfigDataModel>,
+    val containers: List<ContainerConfigDataModel>,
 )
 
 @Serializable
-data class SectionConfigDataModel(
+data class ContainerConfigDataModel(
     val name: String,
+    val containerType: ContainerType,
     val elements: List<DashboardElementDataModel>,
 )
 

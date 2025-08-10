@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerType
 import io.github.openflocon.flocondesktop.features.dashboard.ui.model.DashboardItemViewState
 import io.github.openflocon.flocondesktop.features.dashboard.ui.model.previewDashboardItemViewState
 import io.github.openflocon.flocondesktop.features.dashboard.ui.view.items.DashboardButtonView
@@ -27,7 +28,7 @@ import io.github.openflocon.library.designsystem.FloconTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun DashboardItemView(
+fun DashboardContainerView(
     viewState: DashboardItemViewState,
     onClickButton: (buttonId: String) -> Unit,
     submitTextField: (textFieldId: String, value: String) -> Unit,
@@ -51,7 +52,7 @@ fun DashboardItemView(
             Text(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
                 textAlign = TextAlign.Center,
-                text = viewState.sectionName,
+                text = viewState.containerName,
                 style = FloconTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
                 ),
@@ -70,6 +71,8 @@ fun DashboardItemView(
                                 modifier = Modifier.fillMaxWidth(),
                                 rowItem = rowItem,
                                 submitTextField = submitTextField,
+                                // A form only needs a single submit button, not on every textfield
+                                showSubmitButton = viewState.containerType != ContainerType.FORM
                             )
                         }
 
@@ -114,7 +117,7 @@ fun DashboardItemView(
 private fun DashboardItemViewPreview() {
     FloconTheme {
         Box(modifier = Modifier.background(Color.White).padding(all = 8.dp)) {
-            DashboardItemView(
+            DashboardContainerView(
                 onClickButton = {},
                 viewState = previewDashboardItemViewState(),
                 submitTextField = { _, _ -> },

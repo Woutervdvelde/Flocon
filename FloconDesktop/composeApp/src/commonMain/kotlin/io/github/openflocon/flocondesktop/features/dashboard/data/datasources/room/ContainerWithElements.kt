@@ -3,11 +3,11 @@ package io.github.openflocon.flocondesktop.features.dashboard.data.datasources.r
 import androidx.room.Embedded
 import androidx.room.Relation
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardElementEntity
-import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardSectionEntity
+import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardContainerEntity
 
-data class SectionWithElements(
+data class ContainerWithElements(
     @Embedded
-    val section: DashboardSectionEntity?,
+    val container: DashboardContainerEntity?,
     @Relation(
         parentColumn = "id",
         entityColumn = "sectionId",

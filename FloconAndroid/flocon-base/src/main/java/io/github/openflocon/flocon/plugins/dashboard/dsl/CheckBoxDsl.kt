@@ -1,10 +1,10 @@
 package io.github.openflocon.flocon.plugins.dashboard.dsl
 
 import io.github.openflocon.flocon.plugins.dashboard.model.config.CheckBoxConfig
-import io.github.openflocon.flocon.plugins.dashboard.model.config.SectionBuilder
+import io.github.openflocon.flocon.plugins.dashboard.builder.ContainerBuilder
 
 @DashboardDsl
-fun SectionBuilder.checkBox(
+fun ContainerBuilder.checkBox(
     id: String,
     label: String,
     value: Boolean,

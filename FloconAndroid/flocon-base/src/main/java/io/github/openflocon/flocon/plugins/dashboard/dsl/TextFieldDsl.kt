@@ -1,10 +1,10 @@
 package io.github.openflocon.flocon.plugins.dashboard.dsl
 
-import io.github.openflocon.flocon.plugins.dashboard.model.config.SectionBuilder
+import io.github.openflocon.flocon.plugins.dashboard.builder.ContainerBuilder
 import io.github.openflocon.flocon.plugins.dashboard.model.config.TextFieldConfig
 
 @DashboardDsl
-fun SectionBuilder.textField(
+fun ContainerBuilder.textField(
     id: String,
     label: String,
     placeHolder: String?,

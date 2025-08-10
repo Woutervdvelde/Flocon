@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = DashboardSectionEntity::class,
+            entity = DashboardContainerEntity::class,
             parentColumns = ["id"],
             childColumns = ["sectionId"],
             onDelete = ForeignKey.CASCADE,

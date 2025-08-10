@@ -6,44 +6,44 @@ import io.github.openflocon.flocondesktop.features.dashboard.domain.model.Dashbo
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardElementDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.ui.model.DashboardItemViewState
 import io.github.openflocon.flocondesktop.features.dashboard.ui.model.DashboardViewState
-import kotlinx.serialization.json.Json
 
 internal fun DashboardDomainModel.toUi(): DashboardViewState = DashboardViewState(
-    items = sections.map {
+    items = containers.map { container ->
         DashboardItemViewState(
-            sectionName = it.name,
-            rows = it.elements.map {
-                when (it) {
+            containerName = container.name,
+            containerType = container.containerType,
+            rows = container.elements.map { element ->
+                when (element) {
                     is DashboardElementDomainModel.Button -> DashboardItemViewState.RowItem.Button(
-                        text = it.text,
-                        id = it.id,
+                        text = element.text,
+                        id = element.id,
                     )
 
                     is DashboardElementDomainModel.Text -> DashboardItemViewState.RowItem.Text(
-                        label = it.label,
-                        value = it.value,
-                        color = it.color?.let { Color(it) },
+                        label = element.label,
+                        value = element.value,
+                        color = element.color?.let { Color(it) },
                     )
 
                     is DashboardElementDomainModel.PlainText -> DashboardItemViewState.RowItem.PlainText(
-                        label = it.label,
-                        value = when (it.type) {
-                            DashboardElementDomainModel.PlainText.Type.Text -> it.value
-                            DashboardElementDomainModel.PlainText.Type.Json -> JsonPrettyPrinter.prettyPrint(it.value)
+                        label = element.label,
+                        value = when (element.type) {
+                            DashboardElementDomainModel.PlainText.Type.Text -> element.value
+                            DashboardElementDomainModel.PlainText.Type.Json -> JsonPrettyPrinter.prettyPrint(element.value)
                         },
                     )
 
                     is DashboardElementDomainModel.TextField -> DashboardItemViewState.RowItem.TextField(
-                        label = it.label,
-                        value = it.value,
-                        placeHolder = it.placeHolder,
-                        id = it.id,
+                        label = element.label,
+                        value = element.value,
+                        placeHolder = element.placeHolder,
+                        id = element.id,
                     )
 
                     is DashboardElementDomainModel.CheckBox -> DashboardItemViewState.RowItem.CheckBox(
-                        label = it.label,
-                        value = it.value,
-                        id = it.id,
+                        label = element.label,
+                        value = element.value,
+                        id = element.id,
                     )
                 }
             },

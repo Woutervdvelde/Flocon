@@ -36,6 +36,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun DashboardTextFieldView(
     rowItem: DashboardItemViewState.RowItem.TextField,
     submitTextField: (id: String, value: String) -> Unit,
+    showSubmitButton: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     var value by remember(rowItem.value) {
@@ -85,12 +86,15 @@ fun DashboardTextFieldView(
                     },
                 )
             }
-            DashboardSendButton(
-                icon = Icons.AutoMirrored.Outlined.Send,
-                onClick = {
-                    submitTextField(rowItem.id, value)
-                },
-            )
+
+            if (showSubmitButton) {
+                DashboardSendButton(
+                    icon = Icons.AutoMirrored.Outlined.Send,
+                    onClick = {
+                        submitTextField(rowItem.id, value)
+                    },
+                )
+            }
         }
     }
 }

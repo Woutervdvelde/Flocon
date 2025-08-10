@@ -4,22 +4,23 @@ import io.github.openflocon.flocondesktop.features.dashboard.data.model.ButtonCo
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.CheckBoxConfigDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.DashboardConfigDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.DashboardElementDataModel
-import io.github.openflocon.flocondesktop.features.dashboard.data.model.SectionConfigDataModel
+import io.github.openflocon.flocondesktop.features.dashboard.data.model.ContainerConfigDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.TextConfigDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.TextFieldConfigDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardElementDomainModel
-import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardSectionDomainModel
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardContainerDomainModel
 
 fun toDomain(model: DashboardConfigDataModel): DashboardDomainModel = DashboardDomainModel(
     dashboardId = model.dashboardId,
-    sections = model.sections.map {
+    containers = model.containers.map {
         toDomain(it)
     },
 )
 
-fun toDomain(model: SectionConfigDataModel): DashboardSectionDomainModel = DashboardSectionDomainModel(
+fun toDomain(model: ContainerConfigDataModel): DashboardContainerDomainModel = DashboardContainerDomainModel(
     name = model.name,
+    containerType = model.containerType,
     elements = model.elements.mapNotNull { toDomain(it) },
 )
 

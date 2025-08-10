@@ -1,22 +1,23 @@
 package io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.mapper
 
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.DashboardWithSectionsAndElements
-import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.SectionWithElements
+import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.ContainerWithElements
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardElementEntity
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardElementDomainModel
-import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardSectionDomainModel
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardContainerDomainModel
 
 internal fun DashboardWithSectionsAndElements.toDomain(): DashboardDomainModel = DashboardDomainModel(
     dashboardId = dashboard.dashboardId,
-    sections = sectionsWithElements.mapNotNull {
+    containers = sectionsWithElements.mapNotNull {
         it.toDomain()
     },
 )
 
-internal fun SectionWithElements.toDomain(): DashboardSectionDomainModel? {
-    return DashboardSectionDomainModel(
-        name = this.section?.name ?: return null,
+internal fun ContainerWithElements.toDomain(): DashboardContainerDomainModel? {
+    return DashboardContainerDomainModel(
+        name = this.container?.name ?: return null,
+        containerType = this.container.type,
         elements = elements.mapNotNull { it.toDomain() },
     )
 }

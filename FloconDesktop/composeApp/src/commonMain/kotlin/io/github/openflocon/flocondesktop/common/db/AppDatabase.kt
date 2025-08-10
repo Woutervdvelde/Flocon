@@ -11,7 +11,7 @@ import io.github.openflocon.flocondesktop.features.analytics.data.datasource.loc
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.FloconDashboardDao
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardElementEntity
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardEntity
-import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardSectionEntity
+import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardContainerEntity
 import io.github.openflocon.flocondesktop.features.database.data.datasource.local.QueryDao
 import io.github.openflocon.flocondesktop.features.database.data.datasource.local.SuccessQueryEntity
 import io.github.openflocon.flocondesktop.features.deeplinks.data.datasource.room.FloconDeeplinkDao
@@ -30,12 +30,12 @@ import io.github.openflocon.flocondesktop.features.table.data.datasource.local.m
 import kotlinx.coroutines.Dispatchers
 
 @Database(
-    version = 32,
+    version = 33,
     entities = [
         FloconHttpRequestEntity::class,
         FileEntity::class,
         DashboardEntity::class,
-        DashboardSectionEntity::class,
+        DashboardContainerEntity::class,
         DashboardElementEntity::class,
         TableEntity::class,
         TableItemEntity::class,
