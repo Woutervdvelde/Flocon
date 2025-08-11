@@ -8,7 +8,7 @@ class SubmitFormToDeviceDeviceUseCase(
     private val getCurrentDeviceIdAndPackageNameUseCase: GetCurrentDeviceIdAndPackageNameUseCase,
     private val getCurrentDeviceSelectedDashboardUseCase: GetCurrentDeviceSelectedDashboardUseCase,
 ) {
-    suspend operator fun invoke(formId: String) {
+    suspend operator fun invoke(formId: String, values: Map<String, Any>) {
         val current = getCurrentDeviceIdAndPackageNameUseCase() ?: return
         val currentDashboard = getCurrentDeviceSelectedDashboardUseCase() ?: return
 
@@ -16,7 +16,7 @@ class SubmitFormToDeviceDeviceUseCase(
             deviceIdAndPackageName = current,
             dashboardId = currentDashboard,
             formId = formId,
-            values = emptyMap()
+            values = values.mapValues { it.value.toString() } // Simple toString for now
         )
     }
 }

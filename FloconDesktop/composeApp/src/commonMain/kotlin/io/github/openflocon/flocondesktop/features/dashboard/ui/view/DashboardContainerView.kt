@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -32,11 +36,20 @@ fun DashboardContainerView(
     viewState: DashboardItemViewState,
     onClickButton: (buttonId: String) -> Unit,
     submitTextField: (textFieldId: String, value: String) -> Unit,
+    submitForm: (formId: String, values: Map<String, Any>) -> Unit,
     onUpdateCheckBox: (checkBoxId: String, value: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val backColor = FloconTheme.colorPalette.panel
     val textColor = FloconTheme.colorPalette.onSurface
+
+    var formState by remember {
+        mutableStateOf(
+            viewState.rows
+                .filterIsInstance<DashboardItemViewState.FormValueItem>()
+                .associate { it.id to it.value }
+        )
+    }
 
     Box(
         modifier = modifier.shadow(
@@ -70,7 +83,15 @@ fun DashboardContainerView(
                             DashboardTextFieldView(
                                 modifier = Modifier.fillMaxWidth(),
                                 rowItem = rowItem,
-                                submitTextField = submitTextField,
+                                value = formState[rowItem.id].toString(),
+                                onValueChange = {
+                                    formState = formState.toMutableMap().apply {
+                                        this[rowItem.id] = it
+                                    }
+                                },
+                                onSubmit = {
+                                    submitTextField(rowItem.id, formState[rowItem.id].toString())
+                                },
                                 // A form only needs a single submit button, not on every textfield
                                 showSubmitButton = viewState.containerType != ContainerType.FORM
                             )
@@ -80,14 +101,26 @@ fun DashboardContainerView(
                             DashboardCheckBoxView(
                                 modifier = Modifier.fillMaxWidth(),
                                 rowItem = rowItem,
-                                onUpdateCheckBox = onUpdateCheckBox,
+                                value = formState[rowItem.id] as Boolean,
+                                onCheckedChange = {
+                                    formState = formState.toMutableMap().apply {
+                                        this[rowItem.id] = it
+                                    }
+                                    onUpdateCheckBox(rowItem.id, it)
+                                }
                             )
                         }
 
                         is DashboardItemViewState.RowItem.Button -> {
                             DashboardButtonView(
                                 modifier = Modifier.fillMaxWidth(),
-                                onClickButton = onClickButton,
+                                onClickButton = {
+                                    if (rowItem.id.contains("form_submit_")) {
+                                        submitForm(rowItem.id, formState)
+                                    } else {
+                                        onClickButton(rowItem.id)
+                                    }
+                                },
                                 rowItem = rowItem,
                             )
                         }
@@ -121,6 +154,7 @@ private fun DashboardItemViewPreview() {
                 onClickButton = {},
                 viewState = previewDashboardItemViewState(),
                 submitTextField = { _, _ -> },
+                submitForm = { _, _ -> },
                 onUpdateCheckBox = { _, _ -> },
                 modifier = Modifier.fillMaxWidth(),
             )

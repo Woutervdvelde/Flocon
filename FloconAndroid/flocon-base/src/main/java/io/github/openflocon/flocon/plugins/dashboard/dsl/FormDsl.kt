@@ -12,7 +12,8 @@ fun DashboardBuilder.form(
 ) {
     val builder = FormBuilder(
         name = name,
-        submitText = submitText
+        submitText = submitText,
+        onSubmitted = onSubmitted
     ).apply {
         block()
     }

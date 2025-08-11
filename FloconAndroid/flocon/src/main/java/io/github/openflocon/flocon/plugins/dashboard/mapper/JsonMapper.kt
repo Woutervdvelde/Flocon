@@ -51,7 +51,13 @@ internal fun ContainerConfig.toJson(
 
     when (this) {
         is FormConfig -> {
-            val actionId = dashboardId + "_" +
+            val actionId = dashboardId + "_" + this.id
+            registerCallback(
+                FormCallback(
+                    id = actionId,
+                    actions = this.onSubmitted
+                )
+            )
         }
 
         else -> Unit

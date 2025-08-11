@@ -14,25 +14,35 @@ data class DashboardItemViewState(
             val value: String,
             val color: Color?,
         ) : RowItem
+
         data class PlainText(
             val label: String,
             val value: String,
         ) : RowItem
+
         data class Button(
             val text: String,
             val id: String,
         ) : RowItem
+
         data class TextField(
             val label: String,
             val placeHolder: String?,
-            val value: String,
-            val id: String,
-        ) : RowItem
+            override val value: String,
+            override val id: String,
+        ) : RowItem, FormValueItem
+
         data class CheckBox(
             val label: String,
-            val value: Boolean,
-            val id: String,
-        ) : RowItem
+            override val value: Boolean,
+            override val id: String,
+        ) : RowItem, FormValueItem
+    }
+
+    /** Any item that can be used as a value in a form */
+    interface FormValueItem {
+        val id: String
+        val value: Any
     }
 }
 
@@ -43,7 +53,12 @@ fun previewDashboardItemViewState() = DashboardItemViewState(
         DashboardItemViewState.RowItem.Text("username", "flo", color = null),
         DashboardItemViewState.RowItem.Text("user.id", "1234567", color = Color.Red),
         DashboardItemViewState.RowItem.CheckBox(label = "isEnabled", value = true, "id"),
-        DashboardItemViewState.RowItem.TextField(label = "change name", value = "florent", id = "id", placeHolder = "new name"),
+        DashboardItemViewState.RowItem.TextField(
+            label = "change name",
+            value = "florent",
+            id = "id",
+            placeHolder = "new name"
+        ),
         DashboardItemViewState.RowItem.Button("click me", "id"),
     ),
 )
