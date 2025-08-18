@@ -114,13 +114,7 @@ fun DashboardContainerView(
                         is DashboardItemViewState.RowItem.Button -> {
                             DashboardButtonView(
                                 modifier = Modifier.fillMaxWidth(),
-                                onClickButton = {
-                                    if (rowItem.id.contains("form_submit_")) {
-                                        submitForm(rowItem.id, formState)
-                                    } else {
-                                        onClickButton(rowItem.id)
-                                    }
-                                },
+                                onClickButton = onClickButton,
                                 rowItem = rowItem,
                             )
                         }
@@ -139,6 +133,23 @@ fun DashboardContainerView(
                             )
                         }
                     }
+                }
+
+                // Submit button for forms
+                if (viewState.containerType == ContainerType.FORM) {
+                    DashboardButtonView(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClickButton = {
+                            submitForm(
+                                viewState.containerId,
+                                formState,
+                            )
+                        },
+                        rowItem = DashboardItemViewState.RowItem.Button(
+                            id = "_",
+                            text = "Submit TODO(get from dsl)",
+                        ),
+                    )
                 }
             }
         }

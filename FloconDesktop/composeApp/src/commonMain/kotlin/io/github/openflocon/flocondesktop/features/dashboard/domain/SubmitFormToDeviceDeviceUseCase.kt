@@ -16,7 +16,10 @@ class SubmitFormToDeviceDeviceUseCase(
             deviceIdAndPackageName = current,
             dashboardId = currentDashboard,
             formId = formId,
-            values = values.mapValues { it.value.toString() } // Simple toString for now
+            values = values
+                // Remove the dashboard prefix from the keys to match actual ID set by user
+                .map { (key, value) -> key.replaceFirst("${currentDashboard}_", "") to value.toString() }
+                .toMap()
         )
     }
 }

@@ -27,6 +27,7 @@ internal fun DashboardContainerDomainModel.toEntity(
     name = this.name,
     type = this.containerType,
     dashboardId = dashboardId,
+    containerId = this.containerId,
     containerOrder = index,
 )
 

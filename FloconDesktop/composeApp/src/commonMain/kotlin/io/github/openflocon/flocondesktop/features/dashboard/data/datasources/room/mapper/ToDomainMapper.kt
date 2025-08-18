@@ -17,6 +17,7 @@ internal fun DashboardWithSectionsAndElements.toDomain(): DashboardDomainModel =
 internal fun ContainerWithElements.toDomain(): DashboardContainerDomainModel? {
     return DashboardContainerDomainModel(
         name = this.container?.name ?: return null,
+        containerId = this.container.containerId,
         containerType = this.container.type,
         elements = elements.mapNotNull { it.toDomain() },
     )

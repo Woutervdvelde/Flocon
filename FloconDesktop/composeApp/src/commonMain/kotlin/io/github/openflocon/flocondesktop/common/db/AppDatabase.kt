@@ -30,7 +30,7 @@ import io.github.openflocon.flocondesktop.features.table.data.datasource.local.m
 import kotlinx.coroutines.Dispatchers
 
 @Database(
-    version = 33,
+    version = 34,
     entities = [
         FloconHttpRequestEntity::class,
         FileEntity::class,

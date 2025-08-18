@@ -20,6 +20,7 @@ fun toDomain(model: DashboardConfigDataModel): DashboardDomainModel = DashboardD
 
 fun toDomain(model: ContainerConfigDataModel): DashboardContainerDomainModel = DashboardContainerDomainModel(
     name = model.name,
+    containerId = model.containerId,
     containerType = model.containerType,
     elements = model.elements.mapNotNull { toDomain(it) },
 )

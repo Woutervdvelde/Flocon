@@ -44,7 +44,7 @@ internal fun DashboardButtonView(
 
 @Preview
 @Composable
-internal fun DashboardButtonViewPreview() {
+private fun DashboardButtonViewPreview() {
     val rowItem = DashboardItemViewState.RowItem.Button(
         id = "button1",
         text = "Click Me",

@@ -27,6 +27,7 @@ data class DashboardContainerEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val dashboardId: String,
+    val containerId: String,
     val type: ContainerType,
     val containerOrder: Int,
     val name: String,

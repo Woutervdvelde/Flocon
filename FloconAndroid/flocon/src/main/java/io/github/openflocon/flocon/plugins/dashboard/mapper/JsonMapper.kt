@@ -1,5 +1,6 @@
 package io.github.openflocon.flocon.plugins.dashboard.mapper
 
+import android.util.Log
 import io.github.openflocon.flocon.plugins.dashboard.model.ContainerType
 import io.github.openflocon.flocon.plugins.dashboard.model.DashboardCallback
 import io.github.openflocon.flocon.plugins.dashboard.model.DashboardCallback.*
@@ -26,52 +27,51 @@ fun DashboardConfig.toJson(
     val containersJsonArray = JSONArray()
 
     containers.forEach { container ->
-        val sectionJson = container.toJson(
+        val containerJson = container.toJson(
             dashboardId = id,
             registerCallback = registerCallback,
         )
-        containersJsonArray.put(sectionJson)
+        containersJsonArray.put(containerJson)
     }
 
     rootJson.put("containers", containersJsonArray)
     return rootJson
 }
 
-
 internal fun ContainerConfig.toJson(
     registerCallback: (DashboardCallback) -> Unit,
     dashboardId: String,
-): JSONObject {
-    val containerJson = JSONObject()
-    containerJson.put("name", this.name)
-    containerJson.put("containerType", when (this) {
-        is FormConfig -> ContainerType.FORM
-        is SectionConfig -> ContainerType.SECTION
-    })
+): JSONObject = JSONObject().apply {
+    put("name", name)
+    var containerId = ""
 
-    when (this) {
+    val (containerType, elementsCallback) = when (this@toJson) {
         is FormConfig -> {
-            val actionId = dashboardId + "_" + this.id
+            val actionId = createActionId(dashboardId, id)
+            containerId = actionId
             registerCallback(
                 FormCallback(
                     id = actionId,
-                    actions = this.onSubmitted
+                    actions = onSubmitted
                 )
             )
+            ContainerType.FORM to { _: DashboardCallback -> Unit }
         }
-
-        else -> Unit
+        is SectionConfig -> {
+            ContainerType.SECTION to registerCallback
+        }
     }
+    put("containerId", containerId)
+    put("containerType", containerType)
 
-    val elements = JSONArray(elements.map {
+    val elementsJsonArray = JSONArray(elements.map { element ->
         parseElementConfig(
-            element = it,
-            registerCallback = registerCallback,
-            dashboardId = dashboardId,
+            element = element,
+            registerCallback = elementsCallback,
+            dashboardId = dashboardId
         )
     })
-    containerJson.put("elements", elements)
-    return containerJson
+    put("elements", elementsJsonArray)
 }
 
 private fun parseElementConfig(
@@ -80,7 +80,7 @@ private fun parseElementConfig(
     dashboardId: String,
 ): JSONObject = when (element) {
     is ButtonConfig -> {
-        val actionId = dashboardId + "_" + element.id
+        val actionId = createActionId(dashboardId, element.id)
         registerCallback(
             ButtonCallback(
                 id = actionId,
@@ -95,7 +95,7 @@ private fun parseElementConfig(
     is TextConfig -> element.toJson()
     is PlainTextConfig -> element.toJson()
     is TextFieldConfig -> {
-        val actionId = dashboardId + "_" + element.id
+        val actionId = createActionId(dashboardId, element.id)
 
         registerCallback(
             TextFieldCallback(
@@ -109,7 +109,7 @@ private fun parseElementConfig(
     }
 
     is CheckBoxConfig -> {
-        val actionId = dashboardId + "_" + element.id
+        val actionId = createActionId(dashboardId, element.id)
         registerCallback(
             CheckBoxCallback(
                 id = actionId,
@@ -121,6 +121,8 @@ private fun parseElementConfig(
         )
     }
 }
+
+private fun createActionId(dashboardId: String, elementId: String) = dashboardId + "_" + elementId
 
 // {
 //     "button" : {

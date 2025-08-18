@@ -12,6 +12,7 @@ data class DashboardConfigDataModel(
 @Serializable
 data class ContainerConfigDataModel(
     val name: String,
+    val containerId: String,
     val containerType: ContainerType,
     val elements: List<DashboardElementDataModel>,
 )

@@ -1,6 +1,5 @@
 package io.github.openflocon.flocon.plugins.dashboard.builder
 
-import io.github.openflocon.flocon.plugins.dashboard.model.config.ButtonConfig
 import io.github.openflocon.flocon.plugins.dashboard.model.config.FormConfig
 
 class FormBuilder(
@@ -13,14 +12,8 @@ class FormBuilder(
         return FormConfig(
             id = "form_$name",
             name = name,
-            elements = elements.apply {
-                add(
-                    ButtonConfig(
-                        text = submitText,
-                        id = "form_submit_$name",
-                        onClick = {})
-                )
-            },
+            submitText = submitText,
+            elements = elements,
             onSubmitted = onSubmitted
         )
     }

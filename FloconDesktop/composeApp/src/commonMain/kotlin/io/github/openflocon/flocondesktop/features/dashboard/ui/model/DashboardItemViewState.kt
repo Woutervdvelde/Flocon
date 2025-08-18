@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerType
 
 data class DashboardItemViewState(
+    val containerId: String,
     val containerName: String,
     val containerType: ContainerType,
     val rows: List<RowItem>,
@@ -47,6 +48,7 @@ data class DashboardItemViewState(
 }
 
 fun previewDashboardItemViewState() = DashboardItemViewState(
+    containerId = "user",
     containerName = "User",
     containerType = ContainerType.SECTION,
     rows = listOf(
