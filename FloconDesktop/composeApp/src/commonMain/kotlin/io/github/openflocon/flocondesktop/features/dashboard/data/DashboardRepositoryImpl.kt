@@ -7,7 +7,10 @@ import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.Da
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.ToDeviceDashboardDataSource
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.device.DeviceDashboardsDataSource
 import io.github.openflocon.flocondesktop.features.dashboard.data.mapper.toDomain
+import io.github.openflocon.flocondesktop.features.dashboard.data.model.ContainerConfigDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.DashboardConfigDataModel
+import io.github.openflocon.flocondesktop.features.dashboard.data.model.FormContainerDataModel
+import io.github.openflocon.flocondesktop.features.dashboard.data.model.SectionContainerDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardId
 import io.github.openflocon.flocondesktop.features.dashboard.domain.repository.DashboardRepository
@@ -17,6 +20,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 class DashboardRepositoryImpl(
     private val dispatcherProvider: DispatcherProvider,
@@ -29,9 +35,17 @@ class DashboardRepositoryImpl(
     override val pluginName = listOf(Protocol.FromDevice.Dashboard.Plugin)
 
     // maybe inject
+
     private val dashboardParser =
         Json {
             ignoreUnknownKeys = true
+            serializersModule = SerializersModule {
+                polymorphic(ContainerConfigDataModel::class) {
+                    subclass(FormContainerDataModel::class, FormContainerDataModel.serializer())
+                    subclass(SectionContainerDataModel::class, SectionContainerDataModel.serializer())
+                }
+            }
+            classDiscriminator = "containerType"
         }
 
     override suspend fun onMessageReceived(
@@ -39,7 +53,12 @@ class DashboardRepositoryImpl(
         message: FloconIncomingMessageDataModel,
     ) {
         withContext(dispatcherProvider.data) {
-            decode(message)?.let { toDomain(it) }?.let { request ->
+            decode(message)?.let {
+                println("MEOW - $it") // Polymorphic working! :D
+                //MEOW - DashboardConfigDataModel(dashboardId=main, containers=[SectionContainerDataModel(name=Tmp section, containerId=, elements=[DashboardElementDataModel(button=ButtonConfigDataModel(text=tmp section button, id=main_tmp_section_button), text=null, plainText=null, textField=null, checkBox=null)]), FormContainerDataModel(name=Test form, containerId=main_form_Test form, elements=[DashboardElementDataModel(button=null, text=TextConfigDataModel(label=Test text, value=Test value, color=null), plainText=null, textField=null, checkBox=null), DashboardElementDataModel(button=null, text=null, plainText=null, textField=TextFieldConfigDataModel(label=Test text field, placeHolder=placeholder, value=, id=main_test_text_field), checkBox=null)], submitText=Submit form)])
+                toDomain(it)
+            }?.let { request ->
+                println("MEOW - ${request.containers.map { it::class }}")
                 dashboardLocalDataSource.saveDashboard(
                     deviceIdAndPackageName = DeviceIdAndPackageNameDomainModel(
                         deviceId = deviceId,

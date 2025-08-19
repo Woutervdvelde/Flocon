@@ -49,6 +49,7 @@ internal fun ContainerConfig.toJson(
         is FormConfig -> {
             val actionId = createActionId(dashboardId, id)
             containerId = actionId
+            put("submitText", submitText)
             registerCallback(
                 FormCallback(
                     id = actionId,

@@ -1,6 +1,7 @@
 package io.github.openflocon.flocondesktop.features.dashboard.data.model
 
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerType
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,12 +11,28 @@ data class DashboardConfigDataModel(
 )
 
 @Serializable
-data class ContainerConfigDataModel(
-    val name: String,
-    val containerId: String,
-    val containerType: ContainerType,
-    val elements: List<DashboardElementDataModel>,
-)
+sealed class ContainerConfigDataModel {
+    abstract val name: String
+    abstract val containerId: String
+    abstract val elements: List<DashboardElementDataModel>
+}
+
+@Serializable
+@SerialName("FORM")
+data class FormContainerDataModel(
+    override val name: String,
+    override val containerId: String,
+    override val elements: List<DashboardElementDataModel>,
+    val submitText: String
+) : ContainerConfigDataModel()
+
+@Serializable
+@SerialName("SECTION")
+data class SectionContainerDataModel(
+    override val name: String,
+    override val containerId: String,
+    override val elements: List<DashboardElementDataModel>,
+) : ContainerConfigDataModel()
 
 @Serializable
 data class DashboardElementDataModel(

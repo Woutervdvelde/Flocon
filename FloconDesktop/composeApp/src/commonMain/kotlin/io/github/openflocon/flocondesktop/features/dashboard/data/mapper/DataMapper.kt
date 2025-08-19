@@ -7,6 +7,7 @@ import io.github.openflocon.flocondesktop.features.dashboard.data.model.Dashboar
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.ContainerConfigDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.TextConfigDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.TextFieldConfigDataModel
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerType
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardElementDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardContainerDomainModel
@@ -21,7 +22,8 @@ fun toDomain(model: DashboardConfigDataModel): DashboardDomainModel = DashboardD
 fun toDomain(model: ContainerConfigDataModel): DashboardContainerDomainModel = DashboardContainerDomainModel(
     name = model.name,
     containerId = model.containerId,
-    containerType = model.containerType,
+//    containerType = model.containerType,
+    containerType = ContainerType.SECTION,
     elements = model.elements.mapNotNull { toDomain(it) },
 )
 
