@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 34,
-    "identityHash": "efa556c19979d9a14ca41963ea228401",
+    "version": 36,
+    "identityHash": "0b901116a65ae8c4968a70bb3fc78879",
     "entities": [
       {
         "tableName": "FloconHttpRequestEntity",
@@ -270,7 +270,7 @@
       },
       {
         "tableName": "DashboardContainerEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dashboardId` TEXT NOT NULL, `containerId` TEXT NOT NULL, `containerOrder` INTEGER NOT NULL, `name` TEXT NOT NULL, FOREIGN KEY(`dashboardId`) REFERENCES `DashboardEntity`(`dashboardId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dashboardId` TEXT NOT NULL, `containerId` TEXT NOT NULL, `containerOrder` INTEGER NOT NULL, `containerConfig` TEXT NOT NULL, `name` TEXT NOT NULL, FOREIGN KEY(`dashboardId`) REFERENCES `DashboardEntity`(`dashboardId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -294,6 +294,12 @@
             "fieldPath": "containerOrder",
             "columnName": "containerOrder",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "containerConfig",
+            "columnName": "containerConfig",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -882,7 +888,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'efa556c19979d9a14ca41963ea228401')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0b901116a65ae8c4968a70bb3fc78879')"
     ]
   }
 }

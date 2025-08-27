@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import io.github.openflocon.flocondesktop.common.db.converters.DashboardConverters
 import io.github.openflocon.flocondesktop.common.db.converters.ListStringsConverters
 import io.github.openflocon.flocondesktop.common.db.converters.MapStringsConverters
 import io.github.openflocon.flocondesktop.features.analytics.data.datasource.local.FloconAnalyticsDao
@@ -30,7 +31,7 @@ import io.github.openflocon.flocondesktop.features.table.data.datasource.local.m
 import kotlinx.coroutines.Dispatchers
 
 @Database(
-    version = 34,
+    version = 36,
     entities = [
         FloconHttpRequestEntity::class,
         FileEntity::class,
@@ -49,6 +50,7 @@ import kotlinx.coroutines.Dispatchers
 @TypeConverters(
     MapStringsConverters::class,
     ListStringsConverters::class,
+    DashboardConverters::class
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract val httpRequestDao: FloconHttpRequestDao

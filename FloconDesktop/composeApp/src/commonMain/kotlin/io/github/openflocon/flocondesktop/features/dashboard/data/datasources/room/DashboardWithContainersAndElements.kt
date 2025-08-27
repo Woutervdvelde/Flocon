@@ -5,7 +5,7 @@ import androidx.room.Relation
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardEntity
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardContainerEntity
 
-data class DashboardWithSectionsAndElements(
+data class DashboardWithContainersAndElements(
     @Embedded
     val dashboard: DashboardEntity,
 
@@ -14,5 +14,5 @@ data class DashboardWithSectionsAndElements(
         entityColumn = "dashboardId",
         entity = DashboardContainerEntity::class,
     )
-    val sectionsWithElements: List<ContainerWithElements>,
+    val containersWithElements: List<ContainerWithElements>,
 )

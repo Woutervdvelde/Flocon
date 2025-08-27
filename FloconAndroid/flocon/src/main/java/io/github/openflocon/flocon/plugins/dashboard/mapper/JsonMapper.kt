@@ -38,32 +38,21 @@ fun DashboardConfig.toJson(
     return rootJson
 }
 
+//  {
+//      "name" : "container name",
+//      "containerType" : "SECTION",
+//      "elements" : [ ... ],
+//      "containerConfig" : ...
+//  }
 internal fun ContainerConfig.toJson(
     registerCallback: (DashboardCallback) -> Unit,
     dashboardId: String,
 ): JSONObject = JSONObject().apply {
-    put("name", name)
-    var containerId = ""
 
-    val (containerType, elementsCallback) = when (this@toJson) {
-        is FormConfig -> {
-            val actionId = createActionId(dashboardId, id)
-            containerId = actionId
-            put("submitText", submitText)
-            registerCallback(
-                FormCallback(
-                    id = actionId,
-                    actions = onSubmitted
-                )
-            )
-            ContainerType.FORM to { _: DashboardCallback -> Unit }
-        }
-        is SectionConfig -> {
-            ContainerType.SECTION to registerCallback
-        }
+    val elementsCallback = when (containerType) {
+        ContainerType.FORM -> { _ -> Unit }
+        ContainerType.SECTION -> registerCallback
     }
-    put("containerId", containerId)
-    put("containerType", containerType)
 
     val elementsJsonArray = JSONArray(elements.map { element ->
         parseElementConfig(
@@ -72,7 +61,17 @@ internal fun ContainerConfig.toJson(
             dashboardId = dashboardId
         )
     })
+
+    put("name", name)
     put("elements", elementsJsonArray)
+
+    put(
+        "containerConfig",
+        when (this@toJson) {
+            is FormConfig -> this@toJson.toJson(dashboardId, registerCallback)
+            is SectionConfig -> this@toJson.toJson()
+        }
+    )
 }
 
 private fun parseElementConfig(
@@ -124,6 +123,34 @@ private fun parseElementConfig(
 }
 
 private fun createActionId(dashboardId: String, elementId: String) = dashboardId + "_" + elementId
+
+/** Form specific config*/
+private fun FormConfig.toJson(
+    dashboardId: String,
+    registerCallback: (DashboardCallback) -> Unit,
+): JSONObject {
+    val actionId = createActionId(dashboardId, id)
+
+    registerCallback(
+        FormCallback(
+            id = actionId,
+            actions = onSubmitted
+        )
+    )
+
+    return JSONObject().apply {
+        put("formId", actionId)
+        put("submitText", submitText)
+        put("containerType", containerType)
+    }
+}
+
+/** Section specific config */
+private fun SectionConfig.toJson(): JSONObject {
+    return JSONObject().apply {
+        put("containerType", containerType)
+    }
+}
 
 // {
 //     "button" : {

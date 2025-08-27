@@ -9,6 +9,8 @@ import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.ro
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardElementTextField
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardEntity
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.room.model.DashboardContainerEntity
+import io.github.openflocon.flocondesktop.features.dashboard.data.model.ContainerConfigDataModel
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerConfigDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardElementDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardId
@@ -25,10 +27,10 @@ internal fun DashboardContainerDomainModel.toEntity(
     index: Int,
 ): DashboardContainerEntity = DashboardContainerEntity(
     name = this.name,
-    type = this.containerType,
     dashboardId = dashboardId,
-    containerId = this.containerId,
+    containerId = "",
     containerOrder = index,
+    containerConfig = this.containerConfig
 )
 
 internal fun DashboardElementDomainModel.toEntity(

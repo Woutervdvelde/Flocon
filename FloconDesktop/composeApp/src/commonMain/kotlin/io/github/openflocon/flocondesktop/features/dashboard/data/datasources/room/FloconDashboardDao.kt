@@ -29,7 +29,7 @@ interface FloconDashboardDao {
         deviceId: String,
         packageName: String,
         dashboardId: String,
-    ): Flow<DashboardWithSectionsAndElements?>
+    ): Flow<DashboardWithContainersAndElements?>
 
     @Transaction
     @Query(
@@ -68,10 +68,11 @@ interface FloconDashboardDao {
         packageName: String,
         dashboard: DashboardDomainModel,
     ) {
+        // TODO rewrite entity saving SECTION and FORM
         // 1. Clear old data
         clearDashboardByDeviceAndId(deviceId = deviceId, dashboard = dashboard.dashboardId)
 
-        // 2. insert the new dashboatd data
+        // 2. insert the new dashboard data
         insertDashboard(
             dashboard = dashboard.toEntity(
                 packageName = packageName,

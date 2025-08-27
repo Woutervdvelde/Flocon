@@ -1,12 +1,12 @@
 package io.github.openflocon.flocondesktop.features.dashboard.ui.model
 
 import androidx.compose.ui.graphics.Color
-import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerType
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerConfigDomainModel
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.SectionContainerConfigDomainModel
 
 data class DashboardItemViewState(
-    val containerId: String,
     val containerName: String,
-    val containerType: ContainerType,
+    val containerConfig: ContainerConfigDomainModel,
     val rows: List<RowItem>,
 ) {
     sealed interface RowItem {
@@ -48,9 +48,8 @@ data class DashboardItemViewState(
 }
 
 fun previewDashboardItemViewState() = DashboardItemViewState(
-    containerId = "user",
     containerName = "User",
-    containerType = ContainerType.SECTION,
+    containerConfig = SectionContainerConfigDomainModel,
     rows = listOf(
         DashboardItemViewState.RowItem.Text("username", "flo", color = null),
         DashboardItemViewState.RowItem.Text("user.id", "1234567", color = Color.Red),

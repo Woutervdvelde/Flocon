@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
-import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerType
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.FormContainerConfigDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.ui.model.DashboardItemViewState
 import io.github.openflocon.flocondesktop.features.dashboard.ui.model.previewDashboardItemViewState
 import io.github.openflocon.flocondesktop.features.dashboard.ui.view.items.DashboardButtonView
@@ -93,7 +93,7 @@ fun DashboardContainerView(
                                     submitTextField(rowItem.id, formState[rowItem.id].toString())
                                 },
                                 // A form only needs a single submit button, not on every textfield
-                                showSubmitButton = viewState.containerType != ContainerType.FORM
+                                showSubmitButton = viewState.containerConfig !is FormContainerConfigDomainModel
                             )
                         }
 
@@ -136,12 +136,12 @@ fun DashboardContainerView(
                 }
 
                 // Submit button for forms
-                if (viewState.containerType == ContainerType.FORM) {
+                if (viewState.containerConfig is FormContainerConfigDomainModel) {
                     DashboardButtonView(
                         modifier = Modifier.fillMaxWidth(),
                         onClickButton = {
                             submitForm(
-                                viewState.containerId,
+                                viewState.containerConfig.formId,
                                 formState,
                             )
                         },

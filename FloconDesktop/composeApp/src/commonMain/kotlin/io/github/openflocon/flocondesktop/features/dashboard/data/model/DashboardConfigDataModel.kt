@@ -1,38 +1,54 @@
 package io.github.openflocon.flocondesktop.features.dashboard.data.model
 
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerConfigDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerType
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.FormContainerConfigDomainModel
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.SectionContainerConfigDomainModel
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonClassDiscriminator
+import java.awt.Container
 
 @Serializable
 data class DashboardConfigDataModel(
     val dashboardId: String,
-    val containers: List<ContainerConfigDataModel>,
+    val containers: List<DashboardContainerDataModel>,
 )
 
 @Serializable
+data class DashboardContainerDataModel(
+    val name: String,
+    val elements: List<DashboardElementDataModel>,
+    val containerConfig: ContainerConfigDataModel
+)
+
+@OptIn(ExperimentalSerializationApi::class)
+@JsonClassDiscriminator("containerType")
+@Serializable
 sealed class ContainerConfigDataModel {
-    abstract val name: String
-    abstract val containerId: String
-    abstract val elements: List<DashboardElementDataModel>
+    abstract fun unwrap(): ContainerConfigDomainModel
 }
 
 @Serializable
 @SerialName("FORM")
-data class FormContainerDataModel(
-    override val name: String,
-    override val containerId: String,
-    override val elements: List<DashboardElementDataModel>,
-    val submitText: String
-) : ContainerConfigDataModel()
+data class FormContainerConfigDataModel(
+    val formId: String,
+    val submitText: String,
+) : ContainerConfigDataModel() {
+    override fun unwrap(): ContainerConfigDomainModel =
+        FormContainerConfigDomainModel(
+            formId = formId,
+            submitText = submitText,
+        )
+}
 
 @Serializable
 @SerialName("SECTION")
-data class SectionContainerDataModel(
-    override val name: String,
-    override val containerId: String,
-    override val elements: List<DashboardElementDataModel>,
-) : ContainerConfigDataModel()
+data object SectionContainerConfigDataModel : ContainerConfigDataModel() {
+    override fun unwrap(): ContainerConfigDomainModel =
+        SectionContainerConfigDomainModel
+}
 
 @Serializable
 data class DashboardElementDataModel(

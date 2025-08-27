@@ -2,6 +2,7 @@ package io.github.openflocon.flocondesktop.features.dashboard.ui.mapper
 
 import androidx.compose.ui.graphics.Color
 import io.github.openflocon.flocondesktop.common.ui.JsonPrettyPrinter
+import io.github.openflocon.flocondesktop.features.dashboard.domain.model.ContainerType
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardElementDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.ui.model.DashboardItemViewState
@@ -10,9 +11,8 @@ import io.github.openflocon.flocondesktop.features.dashboard.ui.model.DashboardV
 internal fun DashboardDomainModel.toUi(): DashboardViewState = DashboardViewState(
     items = containers.map { container ->
         DashboardItemViewState(
-            containerId = container.containerId,
             containerName = container.name,
-            containerType = container.containerType,
+            containerConfig = container.containerConfig,
             rows = container.elements.map { element ->
                 when (element) {
                     is DashboardElementDomainModel.Button -> DashboardItemViewState.RowItem.Button(

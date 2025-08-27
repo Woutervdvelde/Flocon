@@ -8,9 +8,10 @@ import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.To
 import io.github.openflocon.flocondesktop.features.dashboard.data.datasources.device.DeviceDashboardsDataSource
 import io.github.openflocon.flocondesktop.features.dashboard.data.mapper.toDomain
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.ContainerConfigDataModel
+import io.github.openflocon.flocondesktop.features.dashboard.data.model.DashboardContainerDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.data.model.DashboardConfigDataModel
-import io.github.openflocon.flocondesktop.features.dashboard.data.model.FormContainerDataModel
-import io.github.openflocon.flocondesktop.features.dashboard.data.model.SectionContainerDataModel
+import io.github.openflocon.flocondesktop.features.dashboard.data.model.FormContainerConfigDataModel
+import io.github.openflocon.flocondesktop.features.dashboard.data.model.SectionContainerConfigDataModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardDomainModel
 import io.github.openflocon.flocondesktop.features.dashboard.domain.model.DashboardId
 import io.github.openflocon.flocondesktop.features.dashboard.domain.repository.DashboardRepository
@@ -18,11 +19,11 @@ import io.github.openflocon.flocondesktop.messages.domain.model.DeviceIdAndPacka
 import io.github.openflocon.flocondesktop.messages.domain.repository.sub.MessagesReceiverRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 
 class DashboardRepositoryImpl(
     private val dispatcherProvider: DispatcherProvider,
@@ -41,11 +42,10 @@ class DashboardRepositoryImpl(
             ignoreUnknownKeys = true
             serializersModule = SerializersModule {
                 polymorphic(ContainerConfigDataModel::class) {
-                    subclass(FormContainerDataModel::class, FormContainerDataModel.serializer())
-                    subclass(SectionContainerDataModel::class, SectionContainerDataModel.serializer())
+                    subclass(FormContainerConfigDataModel::class, FormContainerConfigDataModel.serializer())
+                    subclass(SectionContainerConfigDataModel::class, SectionContainerConfigDataModel.serializer())
                 }
             }
-            classDiscriminator = "containerType"
         }
 
     override suspend fun onMessageReceived(
@@ -53,12 +53,7 @@ class DashboardRepositoryImpl(
         message: FloconIncomingMessageDataModel,
     ) {
         withContext(dispatcherProvider.data) {
-            decode(message)?.let {
-                println("MEOW - $it") // Polymorphic working! :D
-                //MEOW - DashboardConfigDataModel(dashboardId=main, containers=[SectionContainerDataModel(name=Tmp section, containerId=, elements=[DashboardElementDataModel(button=ButtonConfigDataModel(text=tmp section button, id=main_tmp_section_button), text=null, plainText=null, textField=null, checkBox=null)]), FormContainerDataModel(name=Test form, containerId=main_form_Test form, elements=[DashboardElementDataModel(button=null, text=TextConfigDataModel(label=Test text, value=Test value, color=null), plainText=null, textField=null, checkBox=null), DashboardElementDataModel(button=null, text=null, plainText=null, textField=TextFieldConfigDataModel(label=Test text field, placeHolder=placeholder, value=, id=main_test_text_field), checkBox=null)], submitText=Submit form)])
-                toDomain(it)
-            }?.let { request ->
-                println("MEOW - ${request.containers.map { it::class }}")
+            decode(message)?.let { toDomain(it) }?.let { request ->
                 dashboardLocalDataSource.saveDashboard(
                     deviceIdAndPackageName = DeviceIdAndPackageNameDomainModel(
                         deviceId = deviceId,
@@ -85,6 +80,7 @@ class DashboardRepositoryImpl(
         dashboardId = dashboardId,
     )
         .flowOn(dispatcherProvider.data)
+        .transform { it }
 
     override suspend fun sendClickEvent(
         deviceIdAndPackageName: DeviceIdAndPackageNameDomainModel,
