@@ -10,7 +10,7 @@ import io.github.openflocon.flocondesktop.features.dashboard.ui.model.DashboardV
 
 internal fun DashboardDomainModel.toUi(): DashboardViewState = DashboardViewState(
     items = containers.map { container ->
-        DashboardItemViewState(
+        return@map DashboardItemViewState(
             containerName = container.name,
             containerConfig = container.containerConfig,
             rows = container.elements.map { element ->

@@ -16,8 +16,12 @@ import io.github.openflocon.flocondesktop.features.dashboard.ui.model.Dashboards
 import io.github.openflocon.flocondesktop.features.dashboard.ui.model.DeviceDashboardUiModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -31,7 +35,6 @@ class DashboardViewModel(
     private val dispatcherProvider: DispatcherProvider,
     private val feedbackDisplayer: FeedbackDisplayer,
 ) : ViewModel(dashboardSelectorDelegate) {
-
     val deviceDashboards: StateFlow<DashboardsStateUiModel> = dashboardSelectorDelegate.deviceDashboards
 
     val state: StateFlow<DashboardViewState?> =

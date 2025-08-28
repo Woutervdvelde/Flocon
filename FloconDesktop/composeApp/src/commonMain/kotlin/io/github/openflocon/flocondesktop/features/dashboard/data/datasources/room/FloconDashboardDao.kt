@@ -49,7 +49,7 @@ interface FloconDashboardDao {
     suspend fun insertDashboard(dashboard: DashboardEntity): Long // Returns generated ID
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSections(sections: List<DashboardContainerEntity>): List<Long> // Returns generated IDs
+    suspend fun insertContainers(containers: List<DashboardContainerEntity>): List<Long> // Returns generated IDs
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDashboardElements(elements: List<DashboardElementEntity>)
@@ -68,7 +68,6 @@ interface FloconDashboardDao {
         packageName: String,
         dashboard: DashboardDomainModel,
     ) {
-        // TODO rewrite entity saving SECTION and FORM
         // 1. Clear old data
         clearDashboardByDeviceAndId(deviceId = deviceId, dashboard = dashboard.dashboardId)
 
@@ -81,10 +80,10 @@ interface FloconDashboardDao {
         )
 
         // 3. Prepare sections with the new dashboardId, insert them, and get their new IDs
-        val insertedSectionsIds = insertSections(
-            sections = dashboard.containers
-                .mapIndexed { index, section ->
-                    section.toEntity(
+        val insertedContainersIds = insertContainers(
+            containers = dashboard.containers
+                .mapIndexed { index, container ->
+                    container.toEntity(
                         dashboardId = dashboard.dashboardId,
                         index = index,
                     )
@@ -93,12 +92,12 @@ interface FloconDashboardDao {
 
         // 4. Prepare elements with new sectionIds and insert them
         val allElementsToInsert = mutableListOf<DashboardElementEntity>()
-        dashboard.containers.forEachIndexed { index, section ->
-            insertedSectionsIds.getOrNull(index)?.let { sectionId ->
-                section.elements.forEachIndexed { index, element ->
+        dashboard.containers.forEachIndexed { index, container ->
+            insertedContainersIds.getOrNull(index)?.let { containerId ->
+                container.elements.forEachIndexed { index, element ->
                     allElementsToInsert.add(
                         element.toEntity(
-                            sectionId = sectionId,
+                            sectionId = containerId,
                             index = index,
                         ),
                     )

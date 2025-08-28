@@ -80,7 +80,6 @@ class DashboardRepositoryImpl(
         dashboardId = dashboardId,
     )
         .flowOn(dispatcherProvider.data)
-        .transform { it }
 
     override suspend fun sendClickEvent(
         deviceIdAndPackageName: DeviceIdAndPackageNameDomainModel,
