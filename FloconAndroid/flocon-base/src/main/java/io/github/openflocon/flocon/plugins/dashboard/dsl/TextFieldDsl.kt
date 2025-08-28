@@ -9,7 +9,7 @@ fun ContainerBuilder.textField(
     label: String,
     placeHolder: String?,
     value: String,
-    onSubmitted: (String) -> Unit,
+    onSubmitted: (String) -> Unit = {},
 ) {
     add(
         TextFieldConfig(

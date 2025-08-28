@@ -8,7 +8,7 @@ fun ContainerBuilder.checkBox(
     id: String,
     label: String,
     value: Boolean,
-    onUpdated: (Boolean) -> Unit,
+    onUpdated: (Boolean) -> Unit = {},
 ) {
     add(
         CheckBoxConfig(

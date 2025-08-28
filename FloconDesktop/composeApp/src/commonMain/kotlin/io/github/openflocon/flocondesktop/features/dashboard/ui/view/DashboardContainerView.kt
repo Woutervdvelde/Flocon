@@ -98,6 +98,7 @@ fun DashboardContainerView(
                         }
 
                         is DashboardItemViewState.RowItem.CheckBox -> {
+                            println("checkbox: $rowItem")
                             DashboardCheckBoxView(
                                 modifier = Modifier.fillMaxWidth(),
                                 rowItem = rowItem,
@@ -147,7 +148,7 @@ fun DashboardContainerView(
                         },
                         rowItem = DashboardItemViewState.RowItem.Button(
                             id = "_",
-                            text = "Submit TODO(get from dsl)",
+                            text = viewState.containerConfig.submitText,
                         ),
                     )
                 }
